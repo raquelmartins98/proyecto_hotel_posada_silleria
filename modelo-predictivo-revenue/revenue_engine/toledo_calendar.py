@@ -331,7 +331,7 @@ ELASTICITY_MATRIX: Dict[str, Dict[str, float]] = {
     "S_VERANO":   {"Mon": -1.7, "Tue": -1.8, "Wed": -1.8, "Thu": -1.7,
                    "Fri": -1.3, "Sat": -1.1, "Sun": -1.5},
     "S_OTONO":    {"Mon": -1.4, "Tue": -1.4, "Wed": -1.3, "Thu": -1.2,
-                   "Fr": -0.6, "Sat": -0.4, "Sun": -1.0},
+                    "Fri": -0.6, "Sat": -0.4, "Sun": -1.0},
     "S_NAVIDAD":  {"Mon": -1.0, "Tue": -1.0, "Wed": -0.9, "Thu": -0.8,
                    "Fri": -0.5, "Sat": -0.4, "Sun": -0.7},
     "S_PUENTE":   {"Mon": -0.3, "Tue": -0.3, "Wed": -0.3, "Thu": -0.3,
@@ -379,5 +379,5 @@ SEGMENT_WEIGHTS: Dict[str, Dict[str, float]] = {
 }
 
 # Días de la semana en español
-DOW_NAMES = {0: "Dom", 1: "Lun", 2: "Mar", 3: "Mié", 4: "Jue", 5: "Vie", 6: "Sáb"}
-DOW_SHORT = {0: "Sun", 1: "Mon", 2: "Tue", 3: "Wed", 4: "Thu", 5: "Fri", 6: "Sat"}
+DOW_NAMES = {0: "Lun", 1: "Mar", 2: "Mié", 3: "Jue", 4: "Vie", 5: "Sáb", 6: "Dom"}
+DOW_SHORT = {0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"}

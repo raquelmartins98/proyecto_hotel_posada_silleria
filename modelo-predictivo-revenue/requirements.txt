@@ -1,20 +1,4 @@
-# Revenue Management Engine - Dependencies
-fastapi>=0.115.0
-uvicorn[standard]>=0.34.0
-pydantic>=2.10.0
-pandas>=2.2.0
-numpy>=2.1.0
-python-dateutil>=2.9.0
-openpyxl>=3.1.0
-
-# Dashboard
-streamlit>=1.40.0
-plotly>=5.25.0
-
-# Testing
-pytest>=8.3.0
-pytest-cov>=6.0.0
-
-# Development
-ipykernel>=6.29.0
-jupyter>=1.1.0
+# Single source of truth: pyproject.toml
+# This file is kept for pip install -r requirements.txt convenience.
+# See pyproject.toml for the canonical dependency list with extras.
+-e .[dev,dashboard,csv]

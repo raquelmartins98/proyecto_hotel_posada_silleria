@@ -35,7 +35,7 @@ revenue_engine/
 
 | Componente | Tecnología |
 |-----------|------------|
-| Lenguaje | Python 3.14 |
+| Lenguaje | Python 3.12+ |
 | API REST | FastAPI + Uvicorn |
 | Dashboard | Streamlit |
 | Datos | Pandas + NumPy |

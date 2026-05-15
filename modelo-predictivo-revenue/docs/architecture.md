@@ -52,7 +52,7 @@ Input (ocupación, margen, ROI)
 ### Stack Tecnológico
 
 ```
-Python 3.14
+Python 3.12+
 ├── FastAPI + Uvicorn    → API REST
 ├── Streamlit + Plotly   → Dashboard
 ├── Pandas + NumPy       → Procesamiento de datos

@@ -73,7 +73,7 @@ class ROICalculator:
         if total_investment <= 0:
             return {
                 "roi_pct": 0.0,
-                "payback_years": float('inf'),
+                "payback_years": None,
                 "adjusted_roi_pct": 0.0,
                 "eva": 0.0,
                 "annual_loan_payment": self.annual_loan_payment,
@@ -87,7 +87,7 @@ class ROICalculator:
         roi = (annual_net_profit / total_investment) * 100
         
         # Payback
-        payback = total_investment / annual_net_profit if annual_net_profit > 0 else float('inf')
+        payback = total_investment / annual_net_profit if annual_net_profit > 0 else None
         
         # ROI ajustado (después de coste de capital)
         capital_charge = total_investment * self.investment.wacc / 100
@@ -98,7 +98,7 @@ class ROICalculator:
         
         return {
             "roi_pct": round(roi, 2),
-            "payback_years": round(payback, 2),
+            "payback_years": round(payback, 2) if payback is not None else None,
             "adjusted_roi_pct": round(adjusted_roi, 2),
             "eva": round(eva, 2),
             "annual_loan_payment": round(self.annual_loan_payment, 2),

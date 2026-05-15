@@ -86,7 +86,7 @@ class BreakEvenEngine:
         variable_cost_ratio = total_variable_costs / total_revenue
         
         if variable_cost_ratio >= 1.0:
-            return float('inf')  # Nunca alcanza break-even
+            return None  # Nunca alcanza break-even
         
         return round(total_fixed_costs / (1 - variable_cost_ratio), 2)
     
@@ -99,9 +99,10 @@ class BreakEvenEngine:
         Margen de seguridad = (IngresoActual - BE) / IngresoActual * 100
         
         Indica cuánto pueden caer los ingresos antes de entrar en pérdidas.
+        Retorna None si el break-even no es alcanzable.
         """
-        if current_revenue == 0:
-            return 0.0
+        if breakeven_revenue is None or current_revenue == 0:
+            return None
         return round((current_revenue - breakeven_revenue) / current_revenue * 100, 2)
     
     def contribution_margin_ratio(
@@ -142,7 +143,7 @@ class BreakEvenEngine:
             total_variable += vc_per_night * cat_nights
         
         be_rev = self.breakeven_revenue(total_fixed, total_variable, total_revenue)
-        mos = self.margin_of_safety(total_revenue, be_rev) if be_rev != float('inf') else 0.0
+        mos = self.margin_of_safety(total_revenue, be_rev) if be_rev is not None else None
         
         return {
             "breakeven_occupancy_pct": round(be_occ * 100, 2),

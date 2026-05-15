@@ -255,14 +255,19 @@ class RevenueManager:
         start_date: date,
         end_date: date,
         base_prices: Dict[str, float],
+        marginal_costs: Dict[str, float],
     ) -> List[DailyPricePoint]:
         """
         Genera precios dinámicos día a día para un rango de fechas.
+        
+        Usa la regla de Lerner para fijar el precio óptimo:
+            P* = MC / (1 + 1/ε)
         
         Args:
             start_date: Fecha de inicio
             end_date: Fecha de fin
             base_prices: Dict con {cat_id: precio_base}
+            marginal_costs: Dict con {cat_id: coste_marginal}
         
         Returns:
             Lista de DailyPricePoint
@@ -276,12 +281,13 @@ class RevenueManager:
             
             for cat_id, base_price in base_prices.items():
                 seasonal_price = base_price * coeff
+                mc = marginal_costs.get(cat_id, base_price * 0.6)
                 
-                # Aplicar elasticidad
+                # Aplicar elasticidad (Lerner: P* = MC / (1 + 1/ε))
                 elasticity = self.elasticity.get_elasticity(current)
                 ceiling = self.elasticity.get_market_ceiling(current)
                 optimal = self.elasticity.get_optimal_price(
-                    seasonal_price, elasticity, ceiling
+                    mc, elasticity, ceiling
                 )
                 
                 point = DailyPricePoint(

@@ -122,12 +122,11 @@ async def daily_prices(
         raise HTTPException(400, "Fechas inválidas. Use formato ISO: YYYY-MM-DD")
     
     manager = get_manager()
-    base_prices = {
-        cp.cat_id: cp.base_price
-        for cp in manager.cost_engine.calculate(occupancy=0.70)
-    }
+    pricing = manager.cost_engine.calculate(occupancy=0.70)
+    base_prices = {cp.cat_id: cp.base_price for cp in pricing}
+    marginal_costs = {cp.cat_id: cp.marginal_cost for cp in pricing}
     
-    daily = manager.run_daily_pricing(start, end, base_prices)
+    daily = manager.run_daily_pricing(start, end, base_prices, marginal_costs)
     
     return {
         "status": "ok",

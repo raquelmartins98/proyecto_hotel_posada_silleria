@@ -193,7 +193,7 @@ class ToledoCalendar:
     
     def is_weekend(self, d: date) -> bool:
         """Viernes (4), Sábado (5) como fin de semana hotelero."""
-        return d.weekday() >= 4
+        return d.weekday() in (4, 5)
     
     def get_season_for_date(self, d: date) -> str:
         """Obtiene la temporada para una fecha, incluyendo eventos y puentes."""

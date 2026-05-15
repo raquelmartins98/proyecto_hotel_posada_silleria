@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modelo-predictivo-revenue"
+version = "1.0.0"
+description = "Modelo Predictivo de Revenue Management para Hotel Posada de la Sillería (Toledo)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+authors = [
+    {name = "Hotel Posada de la Sillería - Revenue Management"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "pydantic>=2.10.0",
+    "pandas>=2.2.0",
+    "numpy>=2.1.0",
+    "python-dateutil>=2.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "ipykernel>=6.29.0",
+]
+dashboard = [
+    "streamlit>=1.40.0",
+    "plotly>=5.25.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["revenue_engine*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

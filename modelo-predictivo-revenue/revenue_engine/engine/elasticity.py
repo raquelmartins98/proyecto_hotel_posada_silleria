@@ -10,7 +10,7 @@ Implementa:
 """
 
 from typing import Optional, Dict, List, Callable
-from datetime import datetime
+from datetime import date, datetime
 import math
 
 from revenue_engine.config import PricingConfig, DEFAULT_CONFIG
@@ -42,7 +42,7 @@ class ElasticityEngine:
         self.config = config
         self.matrix = elasticity_matrix or ELASTICITY_MATRIX
     
-    def get_elasticity(self, d: any, market_ceiling: Optional[float] = None) -> float:
+    def get_elasticity(self, d: date | datetime, market_ceiling: Optional[float] = None) -> float:
         """
         Obtiene la elasticidad compuesta para una fecha.
         
@@ -110,7 +110,7 @@ class ElasticityEngine:
     
     def get_market_ceiling(
         self,
-        d: any,
+        d: date | datetime,
         competitive_price: float = 140.0,
         historical_max: float = 200.0,
         rack_rate: float = 180.0,
@@ -172,7 +172,7 @@ class ElasticityEngine:
         
         return round(elasticity * max(decay, 0.3), 4)
     
-    def _get_effective_season(self, d: any) -> str:
+    def _get_effective_season(self, d: date | datetime) -> str:
         """Temporada efectiva considerando eventos."""
         if isinstance(d, datetime):
             d = d.date()
@@ -181,7 +181,7 @@ class ElasticityEngine:
         
         return self.calendar.get_season_for_date(d)
     
-    def _get_segment_key(self, d: any) -> str:
+    def _get_segment_key(self, d: date | datetime) -> str:
         """Clave de ponderación de segmentos según el día."""
         if isinstance(d, datetime):
             d = d.date()
@@ -201,7 +201,7 @@ class ElasticityEngine:
         
         return "weekday"
     
-    def price_elasticity_report(self, base_price: float, d: any) -> Dict:
+    def price_elasticity_report(self, base_price: float, d: date | datetime) -> Dict:
         """
         Genera un reporte de elasticidad para una fecha concreta.
         """

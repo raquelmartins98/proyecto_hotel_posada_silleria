@@ -17,7 +17,9 @@ from revenue_engine.engine.pricing_engine import RevenueManager
 from revenue_engine.toledo_calendar import ToledoCalendar
 
 
-# ── Modelos de request ──────────────────────────────────────────────
+# ── Modelos de request (Pydantic) ───────────────────────────────────
+# Los modelos del motor (HotelConfig, etc.) usan @dataclass.
+# Solo los schemas de entrada/salida de la API usan Pydantic BaseModel.
 
 class SimulateRequest(BaseModel):
     occupancy: float = Field(default=0.70, description="Ocupación esperada (0-1)")

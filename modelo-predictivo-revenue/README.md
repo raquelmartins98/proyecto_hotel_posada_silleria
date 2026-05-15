@@ -39,7 +39,8 @@ revenue_engine/
 | API REST | FastAPI + Uvicorn |
 | Dashboard | Streamlit |
 | Datos | Pandas + NumPy |
-| Validación | Pydantic |
+| Modelos de dominio | `@dataclass` |
+| Validación API | Pydantic `BaseModel` |
 | Testing | pytest |
 | Persistencia | JSON + SQLAlchemy (SQLite opcional) |
 

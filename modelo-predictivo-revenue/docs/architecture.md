@@ -56,7 +56,8 @@ Python 3.12+
 ├── FastAPI + Uvicorn    → API REST
 ├── Streamlit + Plotly   → Dashboard
 ├── Pandas + NumPy       → Procesamiento de datos
-└── Pydantic             → Validación de modelos
+├── @dataclass           → Modelos de dominio (engine)
+└── Pydantic BaseModel   → Schemas de request/response (API)
 ```
 
 ### Estructura de Directorios
@@ -82,7 +83,7 @@ revenue_engine/
 ├── dashboard/           → Streamlit UI
 │   └── app.py
 │
-├── models.py            → Pydantic/dataclass models
+├── models.py            → @dataclass models del dominio
 ├── config.py            → Configuración global
 └── toledo_calendar.py   → Calendario turístico de Toledo
 ```

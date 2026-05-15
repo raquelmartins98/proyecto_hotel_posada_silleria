@@ -3,11 +3,10 @@ Endpoints REST del Revenue Management Engine.
 """
 
 from datetime import date, datetime
-from typing import Dict, List, Optional, Any
 import io
 import csv
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse, Response
 
 from revenue_engine.models import (
@@ -18,21 +17,16 @@ from revenue_engine.toledo_calendar import ToledoCalendar
 
 router = APIRouter()
 
-# Instancia global del motor (singleton)
-_manager: Optional[RevenueManager] = None
-
 
 def get_manager() -> RevenueManager:
-    """Obtiene o crea la instancia del RevenueManager."""
-    global _manager
-    if _manager is None:
-        config = HotelConfig.from_seed("posada_silleria")
-        _manager = RevenueManager(config)
-    return _manager
+    """Crea un RevenueManager fresco por request. Sin estado mutable compartido."""
+    config = HotelConfig.from_seed("posada_silleria")
+    return RevenueManager(config)
 
 
 @router.post("/simulate")
 async def simulate(
+    manager: RevenueManager = Depends(get_manager),
     occupancy: float = Query(0.70, description="Ocupación esperada (0-1)"),
     target_margin: float = Query(20.0, description="Margen objetivo (%)"),
     target_roi: float = Query(15.0, description="ROI objetivo anual (%)"),
@@ -50,7 +44,6 @@ async def simulate(
     except (AttributeError, KeyError):
         raise HTTPException(400, "Escenario no válido. Use: pesimista, realista u optimista")
     
-    manager = get_manager()
     result = manager.run_simulation(
         occupancy=occupancy,
         target_margin=target_margin,
@@ -64,11 +57,11 @@ async def simulate(
 
 @router.get("/breakeven")
 async def breakeven(
+    manager: RevenueManager = Depends(get_manager),
     target_margin: float = Query(20.0),
     total_investment: float = Query(1_200_000.0),
 ):
     """Análisis de break-even con múltiples escenarios."""
-    manager = get_manager()
     analysis = manager.breakeven_analysis(target_margin, total_investment)
     return {"status": "ok", "data": analysis}
 
@@ -111,6 +104,7 @@ async def seasonality(year: int = Query(2026, description="Año")):
 
 @router.get("/prices/daily")
 async def daily_prices(
+    manager: RevenueManager = Depends(get_manager),
     start_date: str = Query("2026-01-01"),
     end_date: str = Query("2026-12-31"),
 ):
@@ -121,7 +115,6 @@ async def daily_prices(
     except ValueError:
         raise HTTPException(400, "Fechas inválidas. Use formato ISO: YYYY-MM-DD")
     
-    manager = get_manager()
     pricing = manager.cost_engine.calculate(occupancy=0.70)
     base_prices = {cp.cat_id: cp.base_price for cp in pricing}
     marginal_costs = {cp.cat_id: cp.marginal_cost for cp in pricing}
@@ -168,6 +161,7 @@ async def roi_simulation(
 
 @router.get("/report/csv")
 async def report_csv(
+    manager: RevenueManager = Depends(get_manager),
     scenario: str = Query("realista"),
     occupancy: float = Query(0.70),
 ):
@@ -179,7 +173,6 @@ async def report_csv(
     }
     scenario_name = scenario_map.get(scenario.lower(), ScenarioName.REALISTA)
     
-    manager = get_manager()
     result = manager.run_simulation(occupancy=occupancy, scenario_name=scenario_name)
     
     output = io.StringIO()
@@ -228,6 +221,7 @@ async def report_csv(
 
 @router.post("/booking-pace")
 async def booking_pace(
+    manager: RevenueManager = Depends(get_manager),
     arrival_date: str = Query(..., description="Fecha de llegada (YYYY-MM-DD)"),
     current_bookings: int = Query(0, description="Reservas actuales"),
     total_rooms: int = Query(22, description="Total habitaciones"),
@@ -239,7 +233,6 @@ async def booking_pace(
     except ValueError:
         raise HTTPException(400, "Fecha inválida")
     
-    manager = get_manager()
     report = manager.booking_pace.snapshot_report(
         d=arrival,
         current_bookings=current_bookings,

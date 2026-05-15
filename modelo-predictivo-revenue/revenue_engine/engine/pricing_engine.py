@@ -223,8 +223,10 @@ class RevenueManager:
                 month_revenue += cp.base_price * month_nights
                 
                 # Coste fijo mensual asignado
+                # cp.fixed_cost_share es ANUAL. Se prorratea por días del mes / total días del período.
+                # Ej: enero (31 días) recibe annual_share * 31/365 ≈ 8.5% del coste fijo anual.
                 cat_nights_total = cp.room_count * days_in_period * occupancy
-                fixed_share_month = (cp.fixed_cost_share * days / 30) if cat_nights_total > 0 else 0
+                fixed_share_month = (cp.fixed_cost_share * days / days_in_period) if cat_nights_total > 0 else 0
                 
                 month_costs += fixed_share_month + cp.variable_per_night * month_nights
             

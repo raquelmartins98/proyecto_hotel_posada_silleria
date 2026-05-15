@@ -1,0 +1,16 @@
+pydantic<3,>=2.5
+typer<1,>=0.9
+rich<14,>=13.7
+sqlmodel<1,>=0.0.14
+numpy<3,>=1.26
+pandas<4,>=2.1
+openpyxl<4,>=3.1
+
+[dashboard]
+streamlit<2,>=1.28
+
+[dev]
+pytest<9,>=7.4
+pytest-cov<6,>=4.1
+ruff<1,>=0.1
+black<25,>=23.12

@@ -1,0 +1,22 @@
+Metadata-Version: 2.4
+Name: posada-revenue
+Version: 0.1.0
+Summary: Revenue Management System — Hotel Posada de la Sillería (Toledo)
+Author-email: Raquel Martins <raquelsarmi98@gmail.com>
+License: MIT
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic<3,>=2.5
+Requires-Dist: typer<1,>=0.9
+Requires-Dist: rich<14,>=13.7
+Requires-Dist: sqlmodel<1,>=0.0.14
+Requires-Dist: numpy<3,>=1.26
+Requires-Dist: pandas<4,>=2.1
+Requires-Dist: openpyxl<4,>=3.1
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=7.4; extra == "dev"
+Requires-Dist: pytest-cov<6,>=4.1; extra == "dev"
+Requires-Dist: ruff<1,>=0.1; extra == "dev"
+Requires-Dist: black<25,>=23.12; extra == "dev"
+Provides-Extra: dashboard
+Requires-Dist: streamlit<2,>=1.28; extra == "dashboard"

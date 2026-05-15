@@ -56,7 +56,12 @@ def main():
         print(f"     Margen:        {result.net_margin_pct:>8.2f}%")
         print(f"     BE Ocupación:  {result.breakeven_occupancy_pct:>8.1f}%")
         print(f"     ROI:           {result.roi_pct:>8.2f}%")
-        print(f"     Payback:       {result.payback_years:>8.2f} años\n")
+        pb = result.payback_years
+        if pb is not None and pb != float('inf'):
+            print(f"     Payback:       {pb:>8.2f} años")
+        else:
+            print(f"     Payback:       {'   N/A':>8} años")
+        print()
     
     # 3. Precios por categoría
     print("💰 PRECIOS RECOMENDADOS (Escenario Realista 70%)\n")

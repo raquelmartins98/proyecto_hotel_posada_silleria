@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "posada-revenue"
+version = "0.1.0"
+description = "Revenue Management System — Hotel Posada de la Sillería (Toledo)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Raquel Martins", email = "raquelsarmi98@gmail.com"},
+]
+
+dependencies = [
+    "pydantic>=2.5,<3",
+    "typer>=0.9,<1",
+    "rich>=13.7,<14",
+    "sqlmodel>=0.0.14,<1",
+    "numpy>=1.26,<3",
+    "pandas>=2.1,<4",
+    "openpyxl>=3.1,<4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4,<9",
+    "pytest-cov>=4.1,<6",
+    "ruff>=0.1,<1",
+    "black>=23.12,<25",
+]
+dashboard = [
+    "streamlit>=1.28,<2",
+]
+
+[project.scripts]
+posada = "posada_revenue.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["posada_revenue*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = '\.py$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --cov=posada_revenue.engine --cov-report=term-missing --cov-fail-under=85"
+
+[tool.coverage.run]
+source = ["posada_revenue"]
+omit = ["*/tests/*", "*/examples/*"]

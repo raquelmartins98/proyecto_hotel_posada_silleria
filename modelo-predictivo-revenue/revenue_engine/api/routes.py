@@ -7,13 +7,37 @@ import io
 import csv
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import StreamingResponse, Response
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
 
 from revenue_engine.models import (
     HotelConfig, ScenarioName, SimulationInput,
 )
 from revenue_engine.engine.pricing_engine import RevenueManager
 from revenue_engine.toledo_calendar import ToledoCalendar
+
+
+# ── Modelos de request ──────────────────────────────────────────────
+
+class SimulateRequest(BaseModel):
+    occupancy: float = Field(default=0.70, description="Ocupación esperada (0-1)")
+    target_margin: float = Field(default=20.0, description="Margen objetivo (%)")
+    target_roi: float = Field(default=15.0, description="ROI objetivo anual (%)")
+    total_investment: float = Field(default=1_200_000.0, description="Inversión total (€)")
+    scenario: str = Field(default="realista", description="Escenario: pesimista/realista/optimista")
+
+
+class ROIRequest(BaseModel):
+    annual_profit: float = Field(default=120_000.0, description="Beneficio neto anual (€)")
+    total_investment: float = Field(default=1_200_000.0, description="Inversión total (€)")
+
+
+class BookingPaceRequest(BaseModel):
+    arrival_date: str = Field(description="Fecha de llegada (YYYY-MM-DD)")
+    current_bookings: int = Field(default=0, description="Reservas confirmadas")
+    total_rooms: int = Field(default=22, description="Total habitaciones del hotel")
+    current_price: float = Field(default=80.0, description="Precio medio actual (€)")
+
 
 router = APIRouter()
 
@@ -26,29 +50,22 @@ def get_manager() -> RevenueManager:
 
 @router.post("/simulate")
 async def simulate(
+    req: SimulateRequest,
     manager: RevenueManager = Depends(get_manager),
-    occupancy: float = Query(0.70, description="Ocupación esperada (0-1)"),
-    target_margin: float = Query(20.0, description="Margen objetivo (%)"),
-    target_roi: float = Query(15.0, description="ROI objetivo anual (%)"),
-    total_investment: float = Query(1_200_000.0, description="Inversión total (€)"),
-    scenario: str = Query("realista", description="Escenario: pesimista/realista/optimista"),
 ):
     """Ejecuta una simulación completa de pricing y rentabilidad."""
-    try:
-        scenario_map = {
-            "pesimista": ScenarioName.PESIMISTA,
-            "realista": ScenarioName.REALISTA,
-            "optimista": ScenarioName.OPTIMISTA,
-        }
-        scenario_name = scenario_map.get(scenario.lower(), ScenarioName.REALISTA)
-    except (AttributeError, KeyError):
-        raise HTTPException(400, "Escenario no válido. Use: pesimista, realista u optimista")
+    scenario_map = {
+        "pesimista": ScenarioName.PESIMISTA,
+        "realista": ScenarioName.REALISTA,
+        "optimista": ScenarioName.OPTIMISTA,
+    }
+    scenario_name = scenario_map.get(req.scenario.lower(), ScenarioName.REALISTA)
     
     result = manager.run_simulation(
-        occupancy=occupancy,
-        target_margin=target_margin,
-        target_roi=target_roi,
-        total_investment=total_investment,
+        occupancy=req.occupancy,
+        target_margin=req.target_margin,
+        target_roi=req.target_roi,
+        total_investment=req.total_investment,
         scenario_name=scenario_name,
     )
     
@@ -138,18 +155,15 @@ async def daily_prices(
 
 
 @router.post("/roi")
-async def roi_simulation(
-    annual_profit: float = Query(120_000.0, description="Beneficio neto anual"),
-    total_investment: float = Query(1_200_000.0),
-):
+async def roi_simulation(req: ROIRequest):
     """Cálculo de ROI y payback."""
     from revenue_engine.engine.roi_calculator import ROICalculator
     from revenue_engine.models import InvestmentParams
     
-    calc = ROICalculator(InvestmentParams(total_investment=total_investment))
-    result = calc.calculate(annual_profit, total_investment)
-    projection = calc.project_years(annual_profit, years=10)
-    sensitivity = calc.sensitivity_analysis(annual_profit)
+    calc = ROICalculator(InvestmentParams(total_investment=req.total_investment))
+    result = calc.calculate(req.annual_profit, req.total_investment)
+    projection = calc.project_years(req.annual_profit, years=10)
+    sensitivity = calc.sensitivity_analysis(req.annual_profit)
     
     return {
         "status": "ok",
@@ -221,23 +235,20 @@ async def report_csv(
 
 @router.post("/booking-pace")
 async def booking_pace(
+    req: BookingPaceRequest,
     manager: RevenueManager = Depends(get_manager),
-    arrival_date: str = Query(..., description="Fecha de llegada (YYYY-MM-DD)"),
-    current_bookings: int = Query(0, description="Reservas actuales"),
-    total_rooms: int = Query(22, description="Total habitaciones"),
-    current_price: float = Query(80.0, description="Precio actual (€)"),
 ):
     """Proyección de ocupación por booking pace."""
     try:
-        arrival = date.fromisoformat(arrival_date)
+        arrival = date.fromisoformat(req.arrival_date)
     except ValueError:
-        raise HTTPException(400, "Fecha inválida")
+        raise HTTPException(400, "Fecha inválida. Use formato ISO: YYYY-MM-DD")
     
     report = manager.booking_pace.snapshot_report(
         d=arrival,
-        current_bookings=current_bookings,
-        total_rooms=total_rooms,
-        current_price=current_price,
+        current_bookings=req.current_bookings,
+        total_rooms=req.total_rooms,
+        current_price=req.current_price,
     )
     
     return {"status": "ok", "data": report}

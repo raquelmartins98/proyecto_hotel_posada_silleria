@@ -157,7 +157,7 @@ class HotelConfig:
     @classmethod
     def from_seed(cls, seed_name: str = "posada_silleria") -> "HotelConfig":
         """Carga la configuración desde los datos semilla."""
-        from data.seed.seed_data import load_seed
+        from revenue_engine.seeds.seed_data import load_seed
         return load_seed(seed_name)
     
     def total_rooms(self) -> int:

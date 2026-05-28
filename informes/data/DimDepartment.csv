@@ -1,0 +1,6 @@
+﻿"DepartmentKey","DepartmentCode","DepartmentName","IsRevenueCenter","OrderBy","Color"
+"1","ROOMS","Habitaciones","True","1","#1E88E5"
+"2","FNB","Restaurante","True","2","#43A047"
+"3","SPA","Spa","True","3","#8E24AA"
+"4","EVENTS","Eventos","True","4","#FB8C00"
+"5","GEN","General","False","5","#546E7A"

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "posada-revenue"
+version = "0.1.0"
+description = "Sistema de Revenue Management para Hotel Posada de la Sillería (Toledo) — Fase 1: Núcleo Financiero"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Ingeniería de Revenue", email = "rm@posadasilleria.com"},
+]
+
+dependencies = [
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.1",
+    "black>=24.0",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "ARG"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short --cov=posada_revenue.engine --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["posada_revenue"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 85

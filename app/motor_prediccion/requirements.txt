@@ -1,0 +1,12 @@
+# Motor de Predicción — Hotel Posada de la Sillería
+# Python 3.14+ — Windows amd64
+# Instalar: python -m pip install -r requirements.txt
+
+pandas==3.0.3
+numpy==2.4.6
+statsmodels==0.14.6
+pmdarima==2.1.1
+matplotlib==3.10.9
+scikit-learn==1.8.0
+requests==2.34.2
+python-dotenv==1.2.2

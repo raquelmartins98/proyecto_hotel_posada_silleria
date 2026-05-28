@@ -17,15 +17,22 @@ venv/
 *.swp
 *.swo
 
+# Node
+node_modules/
+
 # Environment
 .env
 .env.*
 *.env
 
+# OpenCode config
+opencode.json
+
 # OS
 Thumbs.db
 .DS_Store
 
-# Project specific
+# Project specific — exclude CSVs except Power BI data
 *.csv
+!informes/**/*.csv
 *.xlsx

@@ -1,0 +1,27 @@
+﻿# Power BI
+*.pbix
+*.pbit
+.ipynb_checkpoints/
+
+# PBIP local machine-specific settings (track the rest)
+**/.pbi/localSettings.json
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Temp
+*.tmp
+*.log
+!docs/*.log
+
+# PowerShell temp
+[Cc]onfiguration/
+[Cc]redentials/

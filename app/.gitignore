@@ -1,0 +1,18 @@
+# Environment variables (NUNCA commiteados)
+.env
+.env.local
+.env.*.local
+
+# Dependencias
+node_modules/
+dist/
+
+# Entorno virtual Python (motor de predicción)
+motor_prediccion/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Carpeta vacía tras migrar a frontend/
+posada-app/
